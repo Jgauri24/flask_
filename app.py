@@ -29,4 +29,4 @@ def greet():
     return jsonify({"message": f"Hello, {name}! Welcome to your brand new Flask application."})
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(host="0.0.0.0", port=5000)
