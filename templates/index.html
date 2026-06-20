@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A basic Flask application featuring a stunning premium dark theme and interactive features.">
+    <title>Flask Modern Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="background-decor">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    
+    <main class="container">
+        <header class="header">
+            <div class="logo-area">
+                <span class="logo-icon">⚡</span>
+                <h1 class="app-title">Flask Spark</h1>
+            </div>
+            <p class="tagline">A minimal, beautiful template for building modern web applications.</p>
+        </header>
+
+        <section class="grid">
+            <!-- Greeting Card -->
+            <div class="card glass">
+                <h2 class="card-title">Say Hello</h2>
+                <p class="card-description">Interact with the Flask backend API in real time.</p>
+                <div class="form-group">
+                    <input type="text" id="name-input" placeholder="Enter your name" aria-label="Your Name">
+                    <button id="greet-btn" class="btn btn-primary">Send Greeting</button>
+                </div>
+                <div id="greet-response" class="response-box hidden"></div>
+            </div>
+
+            <!-- Quotes Card -->
+            <div class="card glass">
+                <h2 class="card-title">Daily Quotes</h2>
+                <p class="card-description">Fetch a random programming quote from the server database.</p>
+                <button id="quote-btn" class="btn btn-secondary">Get Quote</button>
+                <div id="quote-response" class="response-box quotes-box hidden">
+                    <p id="quote-text"></p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Built with Flask & HTML5 • Created with Antigravity</p>
+        </footer>
+    </main>
+
+    <!-- JavaScript Client-Side Code -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const greetBtn = document.getElementById("greet-btn");
+            const nameInput = document.getElementById("name-input");
+            const greetResponse = document.getElementById("greet-response");
+
+            const quoteBtn = document.getElementById("quote-btn");
+            const quoteResponse = document.getElementById("quote-response");
+            const quoteText = document.getElementById("quote-text");
+
+            // Handle Greeting
+            greetBtn.addEventListener("click", async () => {
+                const name = nameInput.value;
+                try {
+                    const res = await fetch("/api/greet", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ name })
+                    });
+                    const data = await res.json();
+                    
+                    greetResponse.textContent = data.message;
+                    greetResponse.classList.remove("hidden");
+                    greetResponse.classList.add("fade-in");
+                } catch (error) {
+                    console.error("Error greeting:", error);
+                }
+            });
+
+            // Handle Quote fetching
+            quoteBtn.addEventListener("click", async () => {
+                try {
+                    const res = await fetch("/api/quote");
+                    const data = await res.json();
+                    
+                    quoteText.textContent = data.quote;
+                    quoteResponse.classList.remove("hidden");
+                    quoteResponse.classList.add("fade-in");
+                } catch (error) {
+                    console.error("Error fetching quote:", error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
